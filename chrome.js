@@ -169,7 +169,9 @@ ServiceBuilder.prototype.withEnvironment = function(env) {
  *     could not be found on the current PATH.
  */
 ServiceBuilder.prototype.build = function() {
-  var port = this.port_ || portprober.findFreePort();
+  // Circle CI doesn't seem to like ephemeral ports, or there's a bug in
+  //   the port prober. Either way, hardcode 9515 here to fix it.
+  var port = 9515 || this.port_ || portprober.findFreePort();
   var args = this.args_.concat();  // Defensive copy.
 
   return new remote.DriverService(this.exe_, {
